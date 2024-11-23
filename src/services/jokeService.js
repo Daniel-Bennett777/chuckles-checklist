@@ -1,8 +1,8 @@
 
 
-export const getAllJokes = () => {
-    return fetch(`http://localhost:3000/jokes`).then((res) => res.json());
-  };
+export const getAllFacts = () => {
+  return fetch(`http://localhost:3000/facts`).then((res) => res.json());
+};
   
   export const postNewJoke = async (jokeText) => {
     const response = await fetch(`http://localhost:3000/jokes`, {
