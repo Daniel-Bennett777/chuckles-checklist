@@ -1,101 +1,86 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getAllJokes, postNewJoke, updateJoke, getJokes,deleteJoke} from './services/jokeService'; // Make sure to import postNewJoke
-import stevePic from "./assets/steve.png"
+import { getAllFacts, postNewFact, updateFact, deleteFact } from './services/factService';
+import movieIcon from "./assets/movie-icon.png";
 
 const Header = () => {
   return (
     <div className="app-heading">
-      <h1 className="app-heading-text">Joke Generator</h1>
+      <h1 className="app-heading-text">Movie Facts Board</h1>
     </div>
   );
 };
 
 export const App = () => {
-  const [allJokes, setAllJokes] = useState([]) //allJokes stores all the jokes fetched from the server.
-  const [newJokeText, setNewJokeText] = useState(""); //newJokeText stores the value of the input field for adding a new joke.
-  const [untoldJokes, setUntoldJokes] = useState([]); //untoldJokes stores the filtered array of untold jokes.
-  const [toldJokes, setToldJokes] = useState([]); // toldJokes stores the filtered array of told jokes.
-  const [jokeAdded, setJokeAdded] = useState(false); //is a flag to trigger the useEffect when a new joke is added.
+  const [allFacts, setAllFacts] = useState([]); // All movie facts fetched from the server.
+  const [newFactText, setNewFactText] = useState(""); // Input field for adding a new fact.
+  const [untoldFacts, setUntoldFacts] = useState([]); // Facts not yet "shared."
+  const [sharedFacts, setSharedFacts] = useState([]); // Facts already "shared."
+  const [factAdded, setFactAdded] = useState(false); // Triggers a re-fetch when a new fact is added.
 
   useEffect(() => {
-    getAllJokes()
+    getAllFacts()
       .then((data) => {
-        setAllJokes(data);
+        setAllFacts(data);
 
-        // Filter and set untold and told jokes
-        const untold = data.filter((joke) => !joke.told);//separate array for untold jokes
-        const told = data.filter((joke) => joke.told);//separate array 
-        setUntoldJokes(untold);
-        setToldJokes(told);
+        // Separate "untold" and "shared" facts
+        const untold = data.filter((fact) => !fact.shared);
+        const shared = data.filter((fact) => fact.shared);
+        setUntoldFacts(untold);
+        setSharedFacts(shared);
       })
-      
-  }, [jokeAdded]); 
+      .catch((error) => console.error('Error fetching facts:', error));
+  }, [factAdded]);
 
-  const handleAddJoke = () => {
-    if (newJokeText.trim() !== "") {
-      postNewJoke(newJokeText)
-        .then((newJoke) => {
-          // Add the new joke to the allJokes list
-          setAllJokes([...allJokes, newJoke]);
-          // Clear the input field
-          setNewJokeText("");
-          setJokeAdded(true);
+  const handleAddFact = () => {
+    if (newFactText.trim() !== "") {
+      postNewFact(newFactText)
+        .then((newFact) => {
+          setAllFacts([...allFacts, newFact]);
+          setNewFactText(""); // Clear input field
+          setFactAdded(!factAdded); // Trigger re-fetch
         })
-        .catch((error) => {
-          console.error('Error posting joke:', error);
-          // Display an error message to the user
-          // Update the state to indicate the error
-        });
+        .catch((error) => console.error('Error posting fact:', error));
     }
-  };// By using .trim(), it will remove the whitespace characters, and if the resulting string is empty, you know that the user didn't provide any actual content.
+  };
 
-  const handleToggleTold = async (joke) => {
-    const updatedJoke = {
-      ...joke,
-      told: !joke.told,
+  const handleToggleShared = async (fact) => {
+    const updatedFact = {
+      ...fact,
+      shared: !fact.shared,
     };
-  
+
     try {
-      await updateJoke(updatedJoke);
-  
-      // Update the joke locally instead of fetching all jokes again
-      const updatedAllJokes = allJokes.map((j) => {
-        if (j.id === updatedJoke.id) {
-          return updatedJoke;
-        }
-        return j;
-      });
-  
-      setAllJokes(updatedAllJokes);
-  
-      // Update the untold and told jokes lists
-      const untold = updatedAllJokes.filter((joke) => !joke.told);
-      const told = updatedAllJokes.filter((joke) => joke.told);
-      setUntoldJokes(untold);
-      setToldJokes(told);
+      await updateFact(updatedFact);
+
+      const updatedAllFacts = allFacts.map((f) => (f.id === updatedFact.id ? updatedFact : f));
+      setAllFacts(updatedAllFacts);
+
+      const untold = updatedAllFacts.filter((fact) => !fact.shared);
+      const shared = updatedAllFacts.filter((fact) => fact.shared);
+      setUntoldFacts(untold);
+      setSharedFacts(shared);
     } catch (error) {
-      console.error('Error updating joke:', error);
-      // Display an error message to the user
-      // Update the state to indicate the error
+      console.error('Error updating fact:', error);
     }
   };
-  
-  const handleDeleteJoke = async (joke) => {
+
+  const handleDeleteFact = async (fact) => {
     try {
-      await deleteJoke(joke);
+      await deleteFact(fact);
 
-      const updatedAllJokes = allJokes.filter((j) => j.id !== joke.id);
-      setAllJokes(updatedAllJokes);
+      const updatedAllFacts = allFacts.filter((f) => f.id !== fact.id);
+      setAllFacts(updatedAllFacts);
 
-      const untold = updatedAllJokes.filter((joke) => !joke.told);
-      const told = updatedAllJokes.filter((joke) => joke.told);
-      setUntoldJokes(untold);
-      setToldJokes(told);
+      const untold = updatedAllFacts.filter((fact) => !fact.shared);
+      const shared = updatedAllFacts.filter((fact) => fact.shared);
+      setUntoldFacts(untold);
+      setSharedFacts(shared);
     } catch (error) {
-      console.error('Error deleting joke:', error);
+      console.error('Error deleting fact:', error);
     }
   };
+
 
   return (
     <>
