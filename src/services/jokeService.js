@@ -4,25 +4,24 @@ export const getAllFacts = () => {
   return fetch(`http://localhost:3000/facts`).then((res) => res.json());
 };
   
-  export const postNewJoke = async (jokeText) => {
-    const response = await fetch(`http://localhost:3000/jokes`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text: jokeText,
-        told: false,
-      }),
-    });
-  
-    if (!response.ok) {
-      throw new Error('Failed to post new joke');
-    }
-  
-    const data = await response.json();
-    return data; // This could be the new joke object returned from the server
-  };
+export const postNewFact = async (factText) => {
+  const response = await fetch(`http://localhost:3000/facts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      text: factText,
+      shared: false,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to post new fact');
+  }
+
+  return response.json();
+};
 
   export const updateJoke = async (joke) => {
     try {
