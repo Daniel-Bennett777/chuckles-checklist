@@ -51,34 +51,6 @@ export const deleteFact = async (fact) => {
   return response.json();
 };
 
-  
-  export const getJokes = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/jokes');
-  
-      if (!response.ok) {
-        throw new Error('Failed to fetch jokes');
-      }
-  
-      const jokes = await response.json();
-      return jokes;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  export const deleteJoke = async (joke) => {
-    const response = await fetch(`http://localhost:3000/jokes/${joke.id}`, {
-      method: 'DELETE',
-    });
-  
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-  
-    return response.json();
-  }
 /*The function getAllJokes is defined.
 It uses the fetch function to make a GET request to the URL http://localhost:8088/jokes.
 The fetch function returns a promise that resolves to the response from the server.
