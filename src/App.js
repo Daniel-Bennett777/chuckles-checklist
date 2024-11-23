@@ -81,51 +81,54 @@ export const App = () => {
     }
   };
 
-
   return (
     <>
       <div className="app-heading-circle">
-        <img className="app-logo" src={stevePic} alt="Good job Steve" />
+        <img className="app-logo" src={movieIcon} alt="Movie Icon" />
       </div>
       <div>
         <Header />
-        <div className="joke-add-form">
+        <div className="fact-add-form">
           <input
-            className="joke-input"
+            className="fact-input"
             type="text"
-            id="newJokeInput"
-            value={newJokeText}
-            placeholder="New One Liner"
-            onChange={(event) => setNewJokeText(event.target.value)}
+            id="newFactInput"
+            value={newFactText}
+            placeholder="Add a Movie Fact"
+            onChange={(event) => setNewFactText(event.target.value)}
           />
           <button
-            className="joke-input-submit btn-primary"
-            onClick={handleAddJoke}
+            className="fact-input-submit btn-primary"
+            onClick={handleAddFact}
           >
-            Add Joke
+            Add Fact
           </button>
         </div>
-        <div className="joke-lists-container">
-          <div className="joke-list-container">
-            <h2 className="joke-list-container-header">Untold Jokes</h2>
-            <ul className="joke-list-container">
-              {untoldJokes.map((joke) => (
-                <li className="joke-list-item" key={joke.id}>
-                  <p className='joke-list-item-text'>{joke.text}</p>
-                  <button onClick={() => handleToggleTold(joke)}>{joke.told ? 'Untold' : 'Told'}Toggle</button>
-                  <button onClick={() => handleDeleteJoke(joke)}>Delete</button>
+        <div className="fact-lists-container">
+          <div className="fact-list-container">
+            <h2 className="fact-list-container-header">Untold Facts</h2>
+            <ul className="fact-list-container">
+              {untoldFacts.map((fact) => (
+                <li className="fact-list-item" key={fact.id}>
+                  <p className='fact-list-item-text'>{fact.text}</p>
+                  <button onClick={() => handleToggleShared(fact)}>
+                    {fact.shared ? 'Unshare' : 'Share'}
+                  </button>
+                  <button onClick={() => handleDeleteFact(fact)}>Delete</button>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="joke-list-container">
-            <h2 className="joke-list-container-header">Told Jokes</h2>
-            <ul className=".joke-list-container">
-              {toldJokes.map((joke) => (
-                <li className="joke-list-item" key={joke.id}>
-                  <p className='joke-list-item-text'>{joke.text}</p>
-                  <button onClick={() => handleToggleTold(joke)}>{joke.told ? 'Untold' : 'Told'}Toggle</button>
-                  <button onClick={() => handleDeleteJoke(joke)}>Delete</button>
+          <div className="fact-list-container">
+            <h2 className="fact-list-container-header">Shared Facts</h2>
+            <ul className="fact-list-container">
+              {sharedFacts.map((fact) => (
+                <li className="fact-list-item" key={fact.id}>
+                  <p className='fact-list-item-text'>{fact.text}</p>
+                  <button onClick={() => handleToggleShared(fact)}>
+                    {fact.shared ? 'Unshare' : 'Share'}
+                  </button>
+                  <button onClick={() => handleDeleteFact(fact)}>Delete</button>
                 </li>
               ))}
             </ul>
@@ -134,4 +137,4 @@ export const App = () => {
       </div>
     </>
   );
-} 
+};
