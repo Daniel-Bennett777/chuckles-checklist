@@ -23,26 +23,34 @@ export const postNewFact = async (factText) => {
   return response.json();
 };
 
-  export const updateJoke = async (joke) => {
-    try {
-      const response = await fetch(`http://localhost:3000/jokes/${joke.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(joke),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to update joke');
-      }
-  
-      return await response.json();
-    } catch (error) {
-      throw new Error('Failed to update joke');
-    }
-  };
-  /*The try is used for statements with possible errors to evaluate. It is followed by a catch block,  that contains statements that specify what to do if an exception is thrown in the try block. The catch block is only executed if an exception occurs in the try block. so its kind of a way to write indicators or fail safes into code. */
+export const updateFact = async (fact) => {
+  const response = await fetch(`http://localhost:3000/facts/${fact.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(fact),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update fact');
+  }
+
+  return response.json();
+};
+
+export const deleteFact = async (fact) => {
+  const response = await fetch(`http://localhost:3000/facts/${fact.id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
   
   export const getJokes = async () => {
     try {
